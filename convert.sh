@@ -15,11 +15,37 @@ python3 $BASENAME/tf_to_coreml.py
 status=$?
 echo "Default env exit code: $status"
 
-if [ $status -ne 0 ] && [ $FRAMEWORK = "TENSORFLOW" ]; then
-  echo "Trying TF1"
-  cd $TF1_path
-  pipenv run python3 $BASENAME/tf_to_coreml.py
-  status=$?
-  echo "TF1 env exit code: $status"
+if [ $status -eq 0 ]; then
+    exit 0
 fi
 
+# Got Known Error. Send error to user
+if [ $status -eq 4 ]; then
+    echo "User Error: $status"
+    exit 4
+fi
+
+# Generic error. If not TENSORFLOW then stop
+if [ $FRAMEWORK != "TENSORFLOW" ]; then
+    echo "Generic Error: $status"
+    exit 1
+fi
+
+echo "Trying TF1"
+cd $TF1_path
+pipenv run python3 $BASENAME/tf_to_coreml.py
+status=$?
+echo "TF1 env exit code: $status"
+
+if [ $status -eq 0 ]; then
+    exit 0
+fi
+
+# Got Known Error. Send error to user
+if [ $status -eq 4 ]; then
+    echo "User Error: $status"
+    exit 4
+fi
+
+echo "Generic Error: $status"
+exit 1

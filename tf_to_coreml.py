@@ -3,6 +3,11 @@ import json
 import os
 import sys
 
+DISPLAY_TO_USER_ERRORS=[
+    "provided is not found in given tensorflow graph",
+    "C_in / groups",
+]
+
 input_shape_json=os.environ['INPUT_SHAPE']
 framework = os.environ['FRAMEWORK']
 input_model_path = os.environ["INPUT_MODEL"]
@@ -26,6 +31,16 @@ for n in input_shape:
     else:
         raise ValueError("Invalid input_shape {}".format(input_shape))
 
-mlmodel=ct.convert(input_model_path, inputs=inputs)
+try:
+    mlmodel=ct.convert(input_model_path, inputs=inputs)
+except ValueError as e:
+    print('ValueError:', e)
+    err_str = str(e)
+    print("Error (str) {}".format(e))
+    for x in DISPLAY_TO_USER_ERRORS:
+        if x in err_str:
+            sys.exit(4)
+    sys.exit(1)
+
 mlmodel.save(output_model_path)
 print("MLMODEL was saved to ", output_model_path)
