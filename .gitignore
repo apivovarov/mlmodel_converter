@@ -4,3 +4,4 @@ test/models
 *.pb
 *.pt
 *.pyc
+NeoMlmodelConverter.egg-info

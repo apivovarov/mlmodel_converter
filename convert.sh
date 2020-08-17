@@ -11,7 +11,7 @@ TF1_path="${HOME}/pyenv/TF1"
 echo "Framework: $FRAMEWORK"
 
 echo "Trying default env"
-python3 $BASENAME/tf_to_coreml.py
+python3 $BASENAME/src/neo_mlmodel_converter.py
 status=$?
 echo "Default env exit code: $status"
 
@@ -33,7 +33,7 @@ fi
 
 echo "Trying TF1"
 cd $TF1_path
-pipenv run python3 $BASENAME/tf_to_coreml.py
+pipenv run python3 $BASENAME/src/neo_mlmodel_converter.py
 status=$?
 echo "TF1 env exit code: $status"
 
